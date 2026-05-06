@@ -15,8 +15,8 @@ const handleSelect = () => { }
 <template>
   <div class="nav w-100% h-60px">
     <div class="title">
-      <span class="name">虚拟电厂运行管理与监控平台</span>
-      <span class="name2">Virtual power plant operation management and monitoring platform</span>
+      <span class="name">绿舟科技虚拟电厂运行管理与监控平台</span>
+      <span class="name2">LZ Virtual power plant operation management and monitoring platform</span>
     </div>
     <div class="decoration">
       <div class="d1"></div>
