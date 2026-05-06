@@ -1,104 +1,123 @@
 # AGENTS.md
 
-This file is the project-level working guide for Codex agents in this repository.
+这是本仓库给 Codex 使用的项目级工作说明。
 
-## Project Intent
+## 项目定位
 
-- This is an open-source Virtual Power Plant (VPP) visual display platform being adapted for the user's company.
-- The near-term goal is an external-facing showcase/demo platform, not a production-grade operational system.
-- Prefer low-cost page, copy, branding, layout, data, and asset adjustments over backend-heavy or architecture-heavy changes.
-- Keep the product language and visual direction aligned with a Chinese virtual power plant business scenario.
+- 这是一个开源的虚拟电厂（VPP）展示平台，当前会基于它做公司内部的二次改造。
+- 近期目标是对外展示用的大屏/门户，不强调真实业务闭环和生产可用性。
+- 改造时优先做低成本调整：页面文案、品牌名称、配色、布局、图片、图表和静态数据。
+- 保持整体风格贴近中文虚拟电厂场景，偏展示、偏大屏、偏可视化。
 
-## Tech Stack
+## 技术栈
 
-- Vue 3.5 + TypeScript + Vite 6.
-- Element Plus for UI widgets, with Chinese locale configured in `src/main.ts`.
-- Pinia is installed but currently only has the default/example `src/stores/counter.ts`.
-- ECharts is wrapped by `src/components/chart/chart.vue` and helpers in `src/components/chart/index.ts`.
-- AntV L7 + Gaode Map are used for map-based pages.
-- UnoCSS utility classes are used heavily in templates.
-- Sass/SCSS is enabled globally through `src/assets/element.scss`.
-- `autofit.js` is used on most page-level views to scale a 1440 x 780 big-screen layout.
+- Vue 3.5 + TypeScript + Vite 6。
+- Element Plus 作为基础 UI 组件库，`src/main.ts` 中已配置中文语言包。
+- Pinia 已安装，但目前仅保留默认示例 `src/stores/counter.ts`。
+- ECharts 通过 `src/components/chart/chart.vue` 和 `src/components/chart/baseOptions.ts` 统一封装。
+- 地图类页面使用 AntV L7 + 高德地图。
+- 页面中大量使用 UnoCSS 工具类。
+- 全局样式通过 `src/assets/main.css` 和 `src/assets/element.scss` 统一控制。
+- 多数页面使用 `autofit.js` 适配 1440 x 780 的大屏布局。
 
-## Commands
+## 常用命令
 
-- Install: `pnpm install`
-- Dev server: `pnpm serve`
-- Production build with type check: `pnpm build`
-- Build only: `pnpm build-only`
-- Preview build: `pnpm preview`
-- Lint: `pnpm lint`
-- Format source: `pnpm format`
+- 安装依赖：`pnpm install`
+- 启动开发服务：`pnpm serve`
+- 生产构建（含类型检查）：`pnpm build`
+- 仅构建：`pnpm build-only`
+- 本地预览构建结果：`pnpm preview`
+- 代码检查：`pnpm lint`
+- 代码格式化：`pnpm format`
 
-Notes:
-- Vite dev server is configured for port `3333` and `open: true` in `vite.config.ts`.
-- Production output goes to `docs/`.
-- Vite `base` is currently `/vpp`; adjust this before deployment if the app is not served under `/vpp`.
+## 构建与部署
 
-## Repository Map
+- Vite 开发端口是 `3333`，并配置了自动打开浏览器。
+- 生产构建输出目录是 `docs/`。
+- 当前 `base` 配置为 `/vpp`，如果部署路径不是这个前缀，需要提前调整。
 
-- `index.html`: Vite HTML entry, mounts `#app` and loads `src/main.ts`.
-- `src/main.ts`: app bootstrap; imports UnoCSS, global CSS, router, Pinia, Element Plus, SVG icon registration.
-- `src/App.vue`: root shell; renders global navigation and `RouterView`.
-- `src/router/index.ts`: all route definitions.
-- `src/components/nav/index.vue`: top navigation and platform title.
-- `src/components/exteriorShell/index.vue`: common panel frame with title/content slots.
-- `src/components/chart/`: shared ECharts wrapper and option factories.
-- `src/views/`: all page-level screens, organized by business module.
-- `src/assets/`: source images, icons, and styles, organized roughly by page/module.
-- `public/`: static public files.
-- `docs/`: generated build output; do not edit directly for source changes.
-- `auto-imports.d.ts` and `components.d.ts`: generated declarations from Vite plugins; avoid manual edits unless there is a deliberate generator-related change.
+## 目录说明
 
-## Route Map
+- `index.html`：Vite 入口页，挂载 `#app` 并加载 `src/main.ts`。
+- `src/main.ts`：应用入口，注册路由、Pinia、Element Plus、UnoCSS 和 SVG 图标。
+- `src/App.vue`：根容器，渲染顶部导航和路由内容。
+- `src/router/index.ts`：全站路由定义。
+- `src/components/nav/index.vue`：顶部导航和平台标题。
+- `src/components/exteriorShell/index.vue`：通用面板外壳。
+- `src/components/chart/`：ECharts 封装和图表配置工具。
+- `src/views/`：各业务页面。
+- `src/assets/`：图片、背景、图标和样式资源。
+- `public/`：静态资源目录。
+- `docs/`：构建产物目录，不直接手改。
+- `auto-imports.d.ts`、`components.d.ts`：自动生成文件，通常不要手动改。
 
-- `/`: home dashboard, map-heavy landing screen.
-- `/resources/metaAnalysis`: resource comprehensive analysis.
-- `/resources/metaOverview`: resource management overview.
-- `/resources/metaEnroll`: resource registration.
-- `/realTimeMonitor`: real-time status monitoring.
-- `/forecast/DataQuery`: forecast data query. Keep the capital `D` unless deliberately changing routes.
-- `/forecast/multiDimension`: multi-dimensional load forecast.
-- `/generationTask/priceSignal`: price signal.
-- `/generationTask/excitationSignal`: excitation/incentive signal.
-- `/task/motivational`: incentive-type information.
-- `/task/demandResponse`: demand response details.
-- `/task/orderElectric`: orderly electricity utilization details.
-- `/effect/technical`: technical parameter assessment.
-- `/effect/deviation`: deviation rate assessment.
+## 路由概览
 
-## Page Structure Pattern
+- `/`：首页大屏。
+- `/resources/metaAnalysis`：资源综合分析。
+- `/resources/metaOverview`：资源管理总览。
+- `/resources/metaEnroll`：资源注册。
+- `/realTimeMonitor`：实时状态监测。
+- `/forecast/DataQuery`：负荷预测数据查询。
+- `/forecast/multiDimension`：多维度负荷预测。
+- `/generationTask/priceSignal`：价格信号。
+- `/generationTask/excitationSignal`：激励信号。
+- `/task/motivational`：激励型信息。
+- `/task/demandResponse`：需求响应详情。
+- `/task/orderElectric`：有序用电详情。
+- `/effect/technical`：技术参数考核。
+- `/effect/deviation`：偏差率考核。
 
-- Most pages use `index.vue` as the layout container and split content into `left.vue`, `center.vue`, and/or `right.vue`.
-- Map pages create an L7 `Scene` inside an element with id `container`.
-- Non-map pages often use a background image on `#container` and compose panels using `ExteriorShell`.
-- Most display data is currently static inside Vue components. This is useful for quick demo-oriented adaptation.
-- Many layout dimensions are fixed for the big-screen design; when changing copy, check that Chinese text still fits.
+## 页面结构习惯
 
-## Editing Guidelines
+- 多数页面以 `index.vue` 作为布局壳，再拆成 `left.vue`、`center.vue`、`right.vue` 等局部组件。
+- 地图类页面会在 `id="container"` 的节点上初始化 L7 `Scene`。
+- 非地图页通常使用背景图 + 面板组件组合展示。
+- 页面数据大多是静态写死的，这很适合做展示型改造。
+- 修改文案时要注意大屏固定尺寸，避免中文过长导致溢出。
 
-- Use UTF-8 when reading or editing Chinese files. In PowerShell, prefer `Get-Content -Encoding UTF8`.
-- Prefer existing Vue SFC style: `<script setup lang="ts">`, local imports, scoped SCSS where already used.
-- Preserve the current big-screen visual language unless the user asks for a broader redesign.
-- For quick business customization, prioritize:
-  - `src/components/nav/index.vue` for platform name and menus.
-  - `src/router/index.ts` for page availability and route labels.
-  - `src/views/**/left.vue`, `center.vue`, `right.vue`, `index.vue` for panel copy, metrics, charts, and mock data.
-  - `src/assets/**` for replacing page-specific images and backgrounds.
-  - `README.md` for project-facing documentation.
-- Do not change `docs/` directly for application behavior; edit `src/` and rebuild.
-- Avoid introducing backend/API work unless explicitly requested. The Vite proxy exists, but current source inspection found no active axios/fetch API usage.
-- Keep dependencies stable unless a requested feature clearly needs a new dependency.
-- Be careful with Gaode Map settings and tokens hardcoded in map pages before public deployment.
+## 改造优先级
 
-## Verification
+如果只是为了快速做成公司展示版，优先改这些地方：
 
-- For source changes, run at least `pnpm build-only` when practical.
-- For type-sensitive or shared changes, run `pnpm build`.
-- For UI/page changes, start `pnpm serve` and inspect the affected route.
-- If Git commands fail with "dubious ownership", the repo likely needs:
-  `git config --global --add safe.directory D:/GithubProject/AI-PBB`
+- `src/components/nav/index.vue`：平台名称、导航菜单、顶栏文案。
+- `src/router/index.ts`：页面入口、菜单结构、路由名称。
+- `src/views/**/index.vue`、`left.vue`、`center.vue`、`right.vue`：各页面内容和静态数据。
+- `src/assets/**`：背景图、图标、装饰图、地图叠加图。
+- `README.md`：项目说明文档。
 
-## Current Adaptation Bias
+## 编辑约定
 
-For this user's current business goal, treat the project as a static, polished VPP showcase. Favor convincing presentation, coherent navigation, realistic mock metrics, company branding, and stable demo flow over full operational correctness.
+- 读写中文文件时统一使用 UTF-8。
+- 优先沿用现有 Vue SFC 写法：`<script setup lang="ts">`、局部引入、`scoped` 样式。
+- 保持现有的大屏科技感风格，除非用户明确要求整体重做。
+- 不要直接改 `docs/` 来实现功能变化，应该改 `src/` 后重新构建。
+- 尽量不要引入后端接口工作，当前代码里也没有真正使用中的 `axios/fetch` 业务链路。
+- `docs/`、`node_modules/`、自动生成文件一般不要纳入常规业务修改。
+- 地图页里写死的高德 token 和坐标，后续如果要公开展示，记得单独检查。
+
+## 验证方式
+
+- 改源码后，优先跑 `pnpm build-only`。
+- 牵涉公共逻辑或类型的改动，跑 `pnpm build` 更稳妥。
+- 改页面后，启动 `pnpm serve` 看实际效果。
+
+## 额外说明
+
+- 如果 Git 再次报 `dubious ownership`，可使用：
+
+```powershell
+git config --global --add safe.directory D:/GithubProject/AI-PBB
+```
+
+## 当前改造倾向
+
+把这个项目当作一个静态、精致、可信的 VPP 展示平台来处理。优先保证：
+
+- 品牌感统一
+- 导航清晰
+- 画面完整
+- 数据看起来合理
+- 演示流程稳定
+
+先把“看起来像样”做到位，再考虑“能不能接真实业务系统”。

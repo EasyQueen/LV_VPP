@@ -15,7 +15,7 @@
         </div>
       </template>
       <template #content>
-        <div class="p-8px h-188px">
+        <div class="px-12px py-8px h-188px">
           <Chart height="100%" :options="chart1Options" />
         </div>
       </template>
@@ -30,7 +30,7 @@
         </div>
       </template>
       <template #content>
-        <div class="p-8px h-188px">
+        <div class="px-12px py-8px h-188px">
           <Chart height="100%" :options="chart2Options" />
         </div>
       </template>
@@ -45,7 +45,7 @@
         </div>
       </template>
       <template #content>
-        <div class="p-8px h-188px">
+        <div class="px-12px py-8px h-188px">
           <Chart height="100%" :options="chart3Options" />
         </div>
       </template>
@@ -63,11 +63,13 @@ import rc2 from '@/assets/home/rc_2.png'
 import { createOption, createRadarOption } from '@/components/chart';
 import Chart from '@/components/chart/chart.vue'
 const chart1Options = reactive<any>(createOption())
-const chart2Options = reactive<any>(createOption({
-  legend: { show: false },
-  yAxis: { show: false },
-  grid: { left: 10 }
-}))
+const chart2Options = reactive<any>(
+  createOption({
+    legend: { show: false },
+    yAxis: { show: false },
+    grid: { left: 16, right: 16 },
+  }),
+)
 const chart3Options = reactive<any>(createRadarOption())
 
 

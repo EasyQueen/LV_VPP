@@ -16,15 +16,15 @@
       </template>
       <template #content>
         <div class="px-16px mb-6px">
-          <div class="flex justify-between mt-6px">
-            <div class="w-106px">
+          <div class="flex justify-between gap-12px mt-6px">
+            <div class="flex-1 min-w-0">
               <div class="bg_wrap_c text-8px text-#C2D6E5 pl-18px">注册虚拟电厂数量</div>
               <div class="text-center">
                 <span class="text-18px text-#fff font-bold">432</span>
                 <span class="text-12px text-#869bb0">家</span>
               </div>
             </div>
-            <div class="w-106px">
+            <div class="flex-1 min-w-0">
               <div class="bg_wrap_c text-8px text-#C2D6E5 pl-18px">注册发电机组数量</div>
               <div class="text-center">
                 <span class="text-18px text-#fff font-bold">4543</span>
@@ -32,15 +32,15 @@
               </div>
             </div>
           </div>
-          <div class="flex justify-between mt-6px">
-            <div class="w-106px">
+          <div class="flex justify-between gap-12px mt-6px">
+            <div class="flex-1 min-w-0">
               <div class="bg_wrap_c text-8px text-#C2D6E5 pl-18px">注册发电单元</div>
               <div class="text-center">
                 <span class="text-18px text-#fff font-bold">6436</span>
                 <span class="text-12px text-#869bb0">户</span>
               </div>
             </div>
-            <div class="w-106px">
+            <div class="flex-1 min-w-0">
               <div class="bg_wrap_c text-8px text-#C2D6E5 pl-18px">分布式额定能源装机容量</div>
               <div class="text-center">
                 <span class="text-18px text-#fff font-bold">866</span>
@@ -90,16 +90,16 @@
           </div>
           <div class="h-15px flex items-center px-2px mt-12px">
             <el-image class="w-9px h-9px mr-6px" :src="c" fit="fill" />
-            <span class="text-11px text-#9AAEBF font-500">网供负荷：</span>
-            <div class="bg_wrap_d w-154px flex items-center justify-center font-500">
+            <span class="text-11px text-#9AAEBF font-500 shrink-0">网供负荷：</span>
+            <div class="bg_wrap_d flex-1 min-w-0 flex items-center justify-center font-500">
               <span class="text-15px text-#fff ">18.52</span>
               <span class="text-9px text-#5BAFCB ">kW</span>
             </div>
           </div>
           <div class="h-15px flex items-center px-2px mt-12px">
             <el-image class="w-9px h-9px mr-6px" :src="c" fit="fill" />
-            <span class="text-11px text-#9AAEBF font-500">上网负荷：</span>
-            <div class="bg_wrap_d w-154px flex items-center justify-center font-500">
+            <span class="text-11px text-#9AAEBF font-500 shrink-0">上网负荷：</span>
+            <div class="bg_wrap_d flex-1 min-w-0 flex items-center justify-center font-500">
               <span class="text-15px text-#fff ">17.62</span>
               <span class="text-9px text-#5BAFCB ">kW</span>
             </div>
@@ -118,12 +118,12 @@
         </div>
       </template>
       <template #content>
-        <div class="px-16px flex items-center">
-          <div class="w-88px h-92px flex items-center justify-center bg_warp_e">
+        <div class="px-16px flex items-center justify-between">
+          <div class="w-98px h-92px flex items-center justify-center bg_warp_e">
             <span class="text-14px text-#fff font-700">46734</span>
           </div>
           <el-image class="w-54px h-25px" :src="f" fit="fill" />
-          <div class="w-88px h-92px flex items-center justify-center bg_warp_e">
+          <div class="w-98px h-92px flex items-center justify-center bg_warp_e">
             <span class="text-14px text-#fff font-700">43241</span>
           </div>
         </div>
@@ -142,22 +142,22 @@
       <template #content>
         <div class="px-16px my-10px">
           <div class="bg_wrap_f pt-6px">
-            <div class="flex">
-              <div class="w-75px flex items-center pl-12px pt-8px">
+            <div class="flex gap-8px">
+              <div class="flex-1 flex items-center pl-12px pt-8px">
                 <div class="w-2px h-2px bg-#fff mr-4px"></div>
                 <span class="text-11px text-#BDD3DA">响应偏差率</span>
               </div>
-              <div class="w-75px flex items-center pl-12px pt-8px">
+              <div class="flex-1 flex items-center pl-12px pt-8px">
                 <div class="w-2px h-2px bg-#fff mr-4px"></div>
                 <span class="text-11px text-#BDD3DA">响应完成率</span>
               </div>
             </div>
-            <div class="flex">
-              <div class="w-75px flex items-center pl-12px pt-8px">
+            <div class="flex gap-8px">
+              <div class="flex-1 flex items-center pl-12px pt-8px">
                 <el-image class="w-10px h-12px mr-4px" :src="x2" fit="fill" />
                 <span class="text-11px text-#B8656E">41%</span>
               </div>
-              <div class="w-75px flex items-center pl-12px pt-8px">
+              <div class="flex-1 flex items-center pl-12px pt-8px">
                 <el-image class="w-10px h-12px mr-4px" :src="x3" fit="fill" />
                 <span class="text-11px text-#74968a">44%</span>
               </div>
@@ -205,9 +205,10 @@ import x5 from '@/assets/home/x5.jpg'
   width: 100%;
   height: 16px;
   background: url('@/assets/home/tb.png');
-  background-size: 100px auto;
+  background-size: 100% 16px;
   background-repeat: no-repeat;
   padding-top: 2px;
+  white-space: nowrap;
 }
 
 .bg_wrap_d {
