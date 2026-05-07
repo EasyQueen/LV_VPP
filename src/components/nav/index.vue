@@ -29,20 +29,6 @@ const handleSelect = () => { }
         <el-menu-item index="/">
           <div class="wrap">首页</div>
         </el-menu-item>
-        <el-sub-menu index="2">
-          <template #title>
-            <div class="wrap">资源管理</div>
-          </template>
-          <el-menu-item index="/resources/metaAnalysis">
-            <div class="wrap">综合分析</div>
-          </el-menu-item>
-          <el-menu-item index="/resources/metaOverview">
-            <div class="wrap">管理总览</div>
-          </el-menu-item>
-          <el-menu-item index="/resources/metaEnroll">
-            <div class="wrap">资源注册</div>
-          </el-menu-item>
-        </el-sub-menu>
         <el-menu-item index="/realTimeMonitor">
           <div class="wrap">实时状态监测</div>
         </el-menu-item>

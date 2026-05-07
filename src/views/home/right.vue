@@ -161,11 +161,11 @@ const greenBoatDayAheadPrices = marketDayAheadPrices.map((marketPrice, index) =>
 })
 
 const siteResourceRows: SiteResourceRow[] = [
-  { name: '安徽瑞隆', city: '合肥', status: '正常', generation: 28640, trade: 10458 },
-  { name: '肥西零重力', city: '合肥', status: '正常', generation: 18420, trade: 7260 },
-  { name: '合肥周谷堆', city: '合肥', status: '正常', generation: 3920, trade: 486 },
-  { name: '合肥航嘉', city: '合肥', status: '正常', generation: 12680, trade: 3984 },
-  { name: '淮北电子产业园', city: '淮北', status: '正常', generation: 23150, trade: 11235 },
+  { name: '安徽瑞隆分布式光伏电站', city: '合肥', status: '正常', generation: 28640, trade: 10458 },
+  { name: '肥西零重力分布式光伏电站', city: '合肥', status: '正常', generation: 18420, trade: 7260 },
+  { name: '合肥周谷堆分布式光伏电站', city: '合肥', status: '正常', generation: 3920, trade: 486 },
+  { name: '合肥航嘉分布式光伏电站', city: '合肥', status: '正常', generation: 12680, trade: 3984 },
+  { name: '淮北电子产业园分布式光伏电站', city: '淮北', status: '正常', generation: 23150, trade: 11235 },
 ]
 
 onMounted(() => {
