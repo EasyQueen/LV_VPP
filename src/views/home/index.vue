@@ -3,14 +3,20 @@ import Left from './left.vue'
 import Right from './right.vue'
 import { LineLayer, PointLayer, Scene } from '@antv/l7'
 import { GaodeMap } from '@antv/l7-maps'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import autofit from 'autofit.js'
-import c1 from '@/assets/home/c1.png'
-import c2 from '@/assets/home/c2.png'
-import c3 from '@/assets/home/c3.png'
-import c4 from '@/assets/home/c4.png'
+import c1 from '@/assets/home/marker-core.svg'
+import c2 from '@/assets/home/marker-blue.svg'
+import c3 from '@/assets/home/marker-cyan.svg'
+import c4 from '@/assets/home/marker-pink.svg'
 
 type CityMarker = 'core' | 'blue' | 'blue-alt' | 'pink'
+
+type CityLabel = {
+  name: string
+  x: number
+  y: number
+}
 
 const hubCity = {
   name: '合肥',
@@ -57,6 +63,40 @@ const lineData = {
 }
 
 let scene: Scene | null = null
+let labelResizeObserver: ResizeObserver | null = null
+let labelUpdateFrame = 0
+const cityLabels = ref<CityLabel[]>([])
+const CITY_LABEL_Y_OFFSET = -20
+
+const updateCityLabels = () => {
+  if (!scene) return
+  const container = document.getElementById('container')
+  const width = container?.clientWidth || 1
+  const height = container?.clientHeight || 1
+
+  cityLabels.value = cityPoints.map((city) => {
+    const point = scene?.lngLatToContainer([city.lng, city.lat])
+
+    return {
+      name: city.name,
+      x: (((point?.x ?? 0) / width) * 100),
+      y: ((((point?.y ?? 0) + CITY_LABEL_Y_OFFSET) / height) * 100),
+    }
+  })
+}
+
+const scheduleCityLabelUpdate = () => {
+  if (labelUpdateFrame) {
+    cancelAnimationFrame(labelUpdateFrame)
+  }
+
+  labelUpdateFrame = requestAnimationFrame(() => {
+    labelUpdateFrame = requestAnimationFrame(() => {
+      updateCityLabels()
+      labelUpdateFrame = 0
+    })
+  })
+}
 
 onMounted(() => {
   autofit.init({
@@ -70,7 +110,7 @@ onMounted(() => {
     logoVisible: false,
     map: new GaodeMap({
       mapStyle: 'amap://styles/dark',
-      center: [118.42, 32.30],
+      center: [118.22, 32.35],
       pitch: 0,
       zoom: 6.75,
       dragEnable: false,
@@ -114,30 +154,30 @@ onMounted(() => {
         },
       })
       .shape('marker', ['city-core', 'city-blue', 'city-blue-alt', 'city-pink'])
-      .size(14)
+      .size(18)
       .style({
         offsets: [0, 34],
       })
     scene?.addLayer(pointLayer)
 
-    const imageLayerText = new PointLayer()
-      .source(cityPoints, {
-        parser: {
-          type: 'json',
-          x: 'lng',
-          y: 'lat',
-        },
-      })
-      .shape('name', 'text')
-      .color('#fff')
-      .size(10)
-      .style({
-        textOffset: [0, 56],
-      })
-    scene?.addLayer(imageLayerText)
+    scheduleCityLabelUpdate()
   })
+
+  const container = document.getElementById('container')
+  if (container) {
+    labelResizeObserver = new ResizeObserver(scheduleCityLabelUpdate)
+    labelResizeObserver.observe(container)
+  }
+  window.addEventListener('resize', scheduleCityLabelUpdate)
 })
 onUnmounted(() => {
+  window.removeEventListener('resize', scheduleCityLabelUpdate)
+  if (labelUpdateFrame) {
+    cancelAnimationFrame(labelUpdateFrame)
+    labelUpdateFrame = 0
+  }
+  labelResizeObserver?.disconnect()
+  labelResizeObserver = null
   scene?.destroy()
   scene = null
   autofit.off()
@@ -147,10 +187,20 @@ onUnmounted(() => {
 <template>
   <main class="relative overflow-hidden h-100% wrapfit">
     <div id="container" />
-    <div class="left z-9 absolute left-15px top-0px w-300px h-100%">
+    <div class="city-label-layer">
+      <span
+        v-for="label in cityLabels"
+        :key="label.name"
+        class="city-label"
+        :style="{ left: `${label.x}%`, top: `${label.y}%` }"
+      >
+        {{ label.name }}
+      </span>
+    </div>
+    <div class="left z-9 absolute left-15px top-0px w-350px h-100%">
       <Left></Left>
     </div>
-    <div class="right z-9 absolute right-16px top-0px w-300px h-100%">
+    <div class="right z-9 absolute right-16px top-0px w-380px h-100%">
       <Right></Right>
     </div>
   </main>
@@ -162,5 +212,34 @@ onUnmounted(() => {
   height: calc(100% - 60px);
   position: relative;
   background: #0b111a;
+}
+
+#container :deep(.amap-layer) {
+  filter: brightness(1.18) contrast(1.28) saturate(1.12);
+}
+
+.city-label-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: calc(100% - 60px);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.city-label {
+  position: absolute;
+  transform: translateX(-50%);
+  color: #e3f4ff;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow:
+    0 1px 2px #07131f,
+    0 0 6px rgba(7, 19, 31, 0.92),
+    0 0 10px rgba(91, 175, 203, 0.42);
 }
 </style>

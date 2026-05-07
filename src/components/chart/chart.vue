@@ -28,7 +28,7 @@ const chartRef = ref()
 
 onMounted(() => {
   const chartDom = chartRef.value
-  chartInstance.value = echarts.init(chartDom)
+  chartInstance.value = echarts.init(chartDom, undefined, { renderer: 'svg' })
   update(props.options)
   const resizeObserver = new ResizeObserver(() => chartInstance.value?.resize())
   resizeObserver.observe(chartDom)

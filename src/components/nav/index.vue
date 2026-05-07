@@ -13,7 +13,7 @@ const handleSelect = () => { }
 </script>
 
 <template>
-  <div class="nav w-100% h-60px">
+  <div class="nav w-100% h-70px">
     <div class="title">
       <span class="name">绿舟科技虚拟电厂运行管理与监控平台</span>
       <span class="name2">LZ Virtual power plant operation management and monitoring platform</span>
@@ -104,15 +104,16 @@ const handleSelect = () => { }
   align-items: center;
 
   .title {
-    width: 440px;
+    width: 480px;
     height: 100%;
     background: linear-gradient(90deg, rgba(2, 153, 255, 0.59) 0%, rgba(36, 140, 210, 0.1) 100%);
     clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-around;
-    padding: 8px 0px;
+    box-sizing: border-box;
+    padding: 8px 0px 8px 24px;
 
     .name {
       font-family: Source Han Sans, Source Han Sans;
@@ -176,11 +177,11 @@ const handleSelect = () => { }
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 14px;
       color: #e4e4e4;
       clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%, 0% 80%);
-      width: 92px;
-      height: 22px;
+      width: 130px;
+      height: 28px;
       border: 1px solid;
       background: #30527580;
       border-image: linear-gradient(180deg, rgba(172.81004548072815, 204.5579954981804, 225.23104459047318, 0), rgba(172.81004548072815, 204.5579954981804, 225.23104459047318, 1)) 1 1;
@@ -204,13 +205,11 @@ const handleSelect = () => { }
     }
 
     ::v-deep(.el-sub-menu) {
-      width: 112px;
-
-
+      width: 130px;
     }
 
     ::v-deep(.el-sub-menu__title) {
-      padding: 0px 10px;
+      padding: 0px 8px;
 
       .el-sub-menu__icon-arrow {
         display: none
