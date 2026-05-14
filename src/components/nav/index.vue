@@ -1,15 +1,59 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { onMounted, ref, watch } from 'vue';
+import { FullScreen } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 const route = useRoute()
-const path = ref('/')
-onMounted(() => {
+const router = useRouter()
+const path = ref(route.path)
+const isFullscreen = ref(false)
+const disabledMenuPrefixes = ['/forecast', '/generationTask', '/task', '/effect']
 
-})
 watch(() => route.path, () => {
   path.value = route.path
 })
-const handleSelect = () => { }
+
+const showNoPermission = () => {
+  ElMessage.warning('暂无权限')
+}
+
+const handleSelect = (index: string) => {
+  if (disabledMenuPrefixes.some((prefix) => index.startsWith(prefix))) {
+    showNoPermission()
+    path.value = route.path
+    return
+  }
+
+  if (index !== route.path) {
+    router.push(index)
+  }
+}
+
+const syncFullscreenState = () => {
+  isFullscreen.value = Boolean(document.fullscreenElement)
+}
+
+const toggleFullscreen = async () => {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen()
+      return
+    }
+
+    await document.documentElement.requestFullscreen()
+  } catch (error) {
+    console.warn('fullscreen toggle failed', error)
+  }
+}
+
+onMounted(() => {
+  syncFullscreenState()
+  document.addEventListener('fullscreenchange', syncFullscreenState)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('fullscreenchange', syncFullscreenState)
+})
 </script>
 
 <template>
@@ -25,13 +69,24 @@ const handleSelect = () => { }
     </div>
     <div class="btn">
       <el-menu popper-class="dx-el-popper" background-color="#252628" :default-active="path" class="el-menu-demo"
-        mode="horizontal" router @select="handleSelect">
+        mode="horizontal" @select="handleSelect">
         <el-menu-item index="/">
           <div class="wrap">首页</div>
         </el-menu-item>
         <el-menu-item index="/realTimeMonitor">
           <div class="wrap">实时状态监测</div>
         </el-menu-item>
+                <el-sub-menu index="trading">
+          <template #title>
+            <div class="wrap">电力交易</div>
+          </template>
+          <el-menu-item index="/trading/revenue">
+            <div class="wrap">交易驾驶舱</div>
+          </el-menu-item>
+          <el-menu-item index="/trading/decision">
+            <div class="wrap">量化决策</div>
+          </el-menu-item>
+        </el-sub-menu>
         <el-sub-menu index="4">
           <template #title>
             <div class="wrap">负荷预测</div>
@@ -81,6 +136,16 @@ const handleSelect = () => { }
         </el-sub-menu>
       </el-menu>
     </div>
+    <button
+      class="fullscreen-btn"
+      type="button"
+      :title="isFullscreen ? '退出全屏展示' : '进入全屏展示'"
+      :aria-label="isFullscreen ? '退出全屏展示' : '进入全屏展示'"
+      :aria-pressed="isFullscreen"
+      @click="toggleFullscreen"
+    >
+      <FullScreen class="fullscreen-icon" />
+    </button>
   </div>
 </template>
 
@@ -90,7 +155,7 @@ const handleSelect = () => { }
   align-items: center;
 
   .title {
-    width: 480px;
+    width: 430px;
     height: 100%;
     background: linear-gradient(90deg, rgba(2, 153, 255, 0.59) 0%, rgba(36, 140, 210, 0.1) 100%);
     clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
@@ -126,13 +191,13 @@ const handleSelect = () => { }
   }
 
   .decoration {
-    width: 60px;
+    width: 46px;
     height: 100%;
     display: flex;
     align-items: center;
 
     div {
-      width: 20px;
+      width: 16px;
       height: 45px;
       transform: skew(-20deg, 0deg);
 
@@ -156,17 +221,18 @@ const handleSelect = () => { }
   }
 
   .btn {
-    margin: 0px 20px;
-    width: 894px;
+    flex: 1;
+    min-width: 0;
+    margin: 0px 8px;
 
     .wrap {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 13px;
       color: #e4e4e4;
       clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%, 0% 80%);
-      width: 130px;
+      width: 112px;
       height: 28px;
       border: 1px solid;
       background: #30527580;
@@ -182,7 +248,7 @@ const handleSelect = () => { }
     }
 
     ::v-deep(.el-menu-item) {
-      padding: 0px 10px;
+      padding: 0px 6px;
       border-bottom: 0px;
     }
 
@@ -191,17 +257,42 @@ const handleSelect = () => { }
     }
 
     ::v-deep(.el-sub-menu) {
-      width: 130px;
+      width: 112px;
     }
 
     ::v-deep(.el-sub-menu__title) {
-      padding: 0px 8px;
+      padding: 0px 6px;
 
       .el-sub-menu__icon-arrow {
         display: none
       }
     }
 
+  }
+
+  .fullscreen-btn {
+    width: 34px;
+    height: 30px;
+    margin-right: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #7fcceb;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    cursor: pointer;
+  }
+
+  .fullscreen-btn:hover {
+    color: #fff;
+    background: transparent;
+  }
+
+  .fullscreen-icon {
+    width: 16px;
+    height: 16px;
   }
 }
 </style>

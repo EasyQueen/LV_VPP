@@ -21,6 +21,8 @@ import DemandResponse from '@/views/task-traceability/demand-response-details/in
 import OrderElectric from '@/views/task-traceability/order-electric-utilization/index.vue'
 import Technical from '@/views/effect-decision/technical-examine/index.vue'
 import Deviation from '@/views/effect-decision/deviation-examine/index.vue'
+import TradingRevenue from '@/views/trading/revenue/index.vue'
+import TradingDecision from '@/views/trading/decision/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +71,16 @@ const router = createRouter({
       path: '/generationTask/excitationSignal',
       name: 'excitationSignal',
       component: ExcitationSignal,
+    },
+    {
+      path: '/trading/revenue',
+      name: 'tradingRevenue',
+      component: TradingRevenue,
+    },
+    {
+      path: '/trading/decision',
+      name: 'tradingDecision',
+      component: TradingDecision,
     },
     {
       path: '/task/motivational',
