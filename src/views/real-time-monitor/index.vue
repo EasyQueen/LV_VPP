@@ -15,14 +15,19 @@ const timeLabels = Array.from({ length: 49 }, (_, index) => {
   return `${hour}:${minute}`
 })
 
+type LoadProfile = {
+  base: number
+  dayShift: number
+}
+
 const stationSeeds = [
   {
     name: '安徽瑞隆分布式光伏电站',
     capacity: 1480,
     offset: 0.2,
-    gridProfile: {
+    loadProfile: {
       base: 0.08,
-      noonPeak: 0.42,
+      dayShift: 0.42,
     },
     lng: 117.205,
     lat: 31.765,
@@ -31,9 +36,9 @@ const stationSeeds = [
     name: '肥西零重力分布式光伏电站',
     capacity: 1280,
     offset: 1.1,
-    gridProfile: {
+    loadProfile: {
       base: 0.12,
-      noonPeak: 0.34,
+      dayShift: 0.34,
     },
     lng: 117.475,
     lat: 31.855,
@@ -42,9 +47,9 @@ const stationSeeds = [
     name: '合肥周谷堆分布式光伏电站',
     capacity: 1360,
     offset: 2,
-    gridProfile: {
+    loadProfile: {
       base: 0.68,
-      noonPeak: 0.16,
+      dayShift: 0.16,
     },
     lng: 117.295,
     lat: 31.705,
@@ -53,9 +58,9 @@ const stationSeeds = [
     name: '合肥航嘉分布式光伏电站',
     capacity: 1160,
     offset: 2.8,
-    gridProfile: {
+    loadProfile: {
       base: 0.1,
-      noonPeak: 0.3,
+      dayShift: 0.3,
     },
     lng: 117.135,
     lat: 31.835,
@@ -64,9 +69,9 @@ const stationSeeds = [
     name: '淮北电子产业园分布式光伏电站',
     capacity: 980,
     offset: 3.5,
-    gridProfile: {
+    loadProfile: {
       base: 0.72,
-      noonPeak: 0.12,
+      dayShift: 0.12,
     },
     lng: 117.27,
     lat: 31.91,
@@ -75,9 +80,9 @@ const stationSeeds = [
     name: '淮北电子产业园2期分布式光伏电站',
     capacity: 1080,
     offset: 4.4,
-    gridProfile: {
+    loadProfile: {
       base: 0.14,
-      noonPeak: 0.38,
+      dayShift: 0.38,
     },
     lng: 117.36,
     lat: 31.895,
@@ -86,9 +91,9 @@ const stationSeeds = [
     name: '南京熊猫（一期）分布式光伏电站',
     capacity: 1320,
     offset: 5.2,
-    gridProfile: {
+    loadProfile: {
       base: 0.16,
-      noonPeak: 0.36,
+      dayShift: 0.36,
     },
     lng: 117.08,
     lat: 31.76,
@@ -97,9 +102,9 @@ const stationSeeds = [
     name: '淮北色耐特分布式光伏电站',
     capacity: 860,
     offset: 6,
-    gridProfile: {
+    loadProfile: {
       base: 0.7,
-      noonPeak: 0.14,
+      dayShift: 0.14,
     },
     lng: 117.42,
     lat: 31.74,
@@ -108,9 +113,9 @@ const stationSeeds = [
     name: '无锡德力佳分布式光伏电站',
     capacity: 1120,
     offset: 6.8,
-    gridProfile: {
+    loadProfile: {
       base: 0.11,
-      noonPeak: 0.33,
+      dayShift: 0.33,
     },
     lng: 117.17,
     lat: 31.93,
@@ -119,9 +124,9 @@ const stationSeeds = [
     name: '淮北华辰选煤分布式光伏电站',
     capacity: 1540,
     offset: 7.6,
-    gridProfile: {
+    loadProfile: {
       base: 0.07,
-      noonPeak: 0.28,
+      dayShift: 0.28,
     },
     lng: 117.52,
     lat: 31.92,
@@ -130,9 +135,9 @@ const stationSeeds = [
     name: '南京熊猫二期分布式光伏电站',
     capacity: 1180,
     offset: 8.4,
-    gridProfile: {
+    loadProfile: {
       base: 0.2,
-      noonPeak: 0.38,
+      dayShift: 0.38,
     },
     lng: 117.03,
     lat: 31.86,
@@ -141,9 +146,9 @@ const stationSeeds = [
     name: '淮北蓝蓝科技分布式光伏电站',
     capacity: 940,
     offset: 9.2,
-    gridProfile: {
+    loadProfile: {
       base: 0.66,
-      noonPeak: 0.18,
+      dayShift: 0.18,
     },
     lng: 117.34,
     lat: 31.68,
@@ -152,9 +157,9 @@ const stationSeeds = [
     name: '淮北电子产业园3期分布式光伏电站',
     capacity: 1260,
     offset: 10,
-    gridProfile: {
+    loadProfile: {
       base: 0.13,
-      noonPeak: 0.4,
+      dayShift: 0.4,
     },
     lng: 117.24,
     lat: 31.98,
@@ -192,13 +197,13 @@ const additionalStationSeeds = [
   ['常州武进新能源园分布式光伏电站', 1230, 32.4, 0.17, 0.4, 119.94, 31.7],
   ['镇江丹阳智能电气园分布式光伏电站', 990, 33.2, 0.64, 0.18, 119.58, 32.0],
   ['扬州仪征汽车零部件园分布式光伏电站', 1070, 34, 0.12, 0.31, 119.18, 32.27],
-].map(([name, capacity, offset, base, noonPeak, lng, lat]) => ({
+].map(([name, capacity, offset, base, dayShift, lng, lat]) => ({
   name: name as string,
   capacity: capacity as number,
   offset: offset as number,
-  gridProfile: {
+  loadProfile: {
     base: base as number,
-    noonPeak: noonPeak as number,
+    dayShift: dayShift as number,
   },
   lng: lng as number,
   lat: lat as number,
@@ -206,29 +211,93 @@ const additionalStationSeeds = [
 
 const allStationSeeds = [...stationSeeds, ...additionalStationSeeds]
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value))
+}
+
+function createPulse(hour: number, center: number, width: number, strength: number) {
+  return Math.exp(-((hour - center) ** 2) / (2 * width ** 2)) * strength
+}
+
+function createNoise(index: number, offset: number) {
+  const value = Math.sin(index * 12.9898 + offset * 78.233) * 43758.5453
+
+  return value - Math.floor(value)
+}
+
 function createActualCurve(capacity: number, offset: number) {
   return timeLabels.map((_, index) => {
     const hour = index / 2
     const daylight = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI))
-    const cloudFactor = 0.88 + Math.sin(index * 0.47 + offset) * 0.08 + Math.cos(index * 0.19 + offset) * 0.05
-    const noonLift = hour > 10 && hour < 14 ? 1.04 : 1
-    return Number((daylight * capacity * cloudFactor * noonLift).toFixed(1))
+
+    if (daylight <= 0) {
+      return 0
+    }
+
+    const cloudDipA = 1 - createPulse(hour, 9.4 + (offset % 2.4) * 0.28, 0.42, 0.08 + (offset % 2) * 0.025)
+    const cloudDipB = 1 - createPulse(hour, 13.2 + (offset % 3.2) * 0.22, 0.56, 0.1 + (offset % 1.8) * 0.03)
+    const afternoonHaze = 1 - createPulse(hour, 15.6 + (offset % 2.6) * 0.2, 0.9, 0.06)
+    const weatherTexture =
+      0.94 +
+      Math.sin(index * 0.63 + offset) * 0.045 +
+      Math.cos(index * 1.17 + offset * 0.7) * 0.032 +
+      (createNoise(index, offset) - 0.5) * 0.065
+    const noonLift = hour > 10.5 && hour < 13.5 ? 1.03 : 1
+    const factor = clamp(weatherTexture * cloudDipA * cloudDipB * afternoonHaze * noonLift, 0.58, 1.12)
+
+    return Number((daylight * capacity * factor).toFixed(1))
   })
 }
 
-function createGridCurve(actual: number[], offset: number, profile: { base: number; noonPeak: number }) {
+function createFactoryLoadValue(capacity: number, offset: number, profile: LoadProfile, hour: number, index: number) {
+  const rampUp = clamp((hour - 6.8) / 1.7, 0, 1)
+  const rampDown = clamp((20.2 - hour) / 2.2, 0, 1)
+  const workdayLoad = rampUp * rampDown
+  const morningStart = createPulse(hour, 8.2 + (offset % 2.8) * 0.16, 0.42, 0.05 + profile.base * 0.04)
+  const afternoonLineChange = createPulse(hour, 14.7 + (offset % 3.4) * 0.18, 0.5, 0.055 + profile.dayShift * 0.05)
+  const overtimeLoad = createPulse(hour, 18.3 + (offset % 2.2) * 0.24, 0.78, profile.dayShift * 0.26)
+  const lunchDip = createPulse(hour, 12.15 + (offset % 2) * 0.08, 0.62, profile.dayShift * 0.16)
+  const maintenanceDip = createPulse(hour, 10.7 + (offset % 3) * 0.22, 0.36, profile.dayShift * 0.08)
+  const processFluctuation =
+    Math.sin(index * 0.52 + offset * 1.3) * 0.018 +
+    Math.cos(index * 0.27 + offset) * 0.014 +
+    (createNoise(index + 17, offset) - 0.5) * 0.028
+  const loadRatio = clamp(
+    profile.base +
+      profile.dayShift * workdayLoad +
+      morningStart +
+      afternoonLineChange +
+      overtimeLoad -
+      lunchDip -
+      maintenanceDip +
+      processFluctuation,
+    0.02,
+    0.94,
+  )
+
+  return capacity * loadRatio
+}
+
+function createGridCurve(actual: number[], capacity: number, offset: number, profile: LoadProfile) {
   return actual.map((value, index) => {
+    if (value <= 0) {
+      return 0
+    }
+
     const hour = index / 2
-    const noonSurplus = Math.exp(-((hour - 12.8) ** 2) / 7.2)
-    const volatility = Math.sin(index * 0.31 + offset) * 0.018
-    const gridRatio = Math.min(0.88, Math.max(0.03, profile.base + profile.noonPeak * noonSurplus + volatility))
-    return Number((value * gridRatio).toFixed(1))
+    const factoryLoad = createFactoryLoadValue(capacity, offset, profile, hour, index)
+    const dispatchTrim = 1 - createPulse(hour, 13.8 + (offset % 2.2) * 0.24, 0.32, 0.055)
+    const inverterLimit = capacity * (0.86 + Math.sin(offset * 0.8) * 0.035)
+    const surplus = Math.max(0, value - factoryLoad)
+    const gridValue = Math.min(value, inverterLimit, surplus * dispatchTrim)
+
+    return Number(gridValue.toFixed(1))
   })
 }
 
 const stations = allStationSeeds.map((station) => {
   const actual = createActualCurve(station.capacity, station.offset)
-  const grid = createGridCurve(actual, station.offset, station.gridProfile)
+  const grid = createGridCurve(actual, station.capacity, station.offset, station.loadProfile)
   const actualTotal = actual.reduce((sum, value) => sum + value, 0)
   const gridTotal = grid.reduce((sum, value) => sum + value, 0)
 
@@ -307,7 +376,7 @@ function createStationOption(station: (typeof visibleStations.value)[number]): E
     color: ['#7bdffb', '#35f2a6'],
     title: {
       text: station.name,
-      subtext: `累计并网率 ${station.gridRate}%`,
+      subtext: `余电并网率 ${station.gridRate}%`,
       left: 'center',
       top: 10,
       textStyle: {
@@ -394,7 +463,7 @@ function createStationOption(station: (typeof visibleStations.value)[number]): E
         name: '实际发电量',
         type: 'line',
         data: station.chartActual,
-        smooth: true,
+        smooth: 0.18,
         symbol: 'none',
         lineStyle: {
           width: 2,
@@ -406,7 +475,7 @@ function createStationOption(station: (typeof visibleStations.value)[number]): E
         name: '实际并网量',
         type: 'line',
         data: station.chartGrid,
-        smooth: true,
+        smooth: 0.16,
         symbol: 'none',
         lineStyle: {
           width: 2.4,
