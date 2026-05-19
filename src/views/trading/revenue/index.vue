@@ -197,16 +197,150 @@ const priceMonitorStats = computed(() => {
   ]
 })
 
-const agentWorkflow = [
-  { title: '光伏出力计划已获取', time: '11:03', detail: '43 座代理场站接入', status: 'done' },
-  { title: '风电出力计划已获取', time: '11:03', detail: '区域新能源边界同步', status: 'done' },
-  { title: '水电出力计划已获取', time: '11:03', detail: '补充省间调节能力', status: 'done' },
-  { title: '联络线计划已获取', time: '11:05', detail: '跨区送受电边界确认', status: 'done' },
-  { title: '省调负荷计划正在获取', time: '监听中', detail: '从电力交易中心数据读取中', status: 'running' },
-  { title: '竞价空间（96点）等待计算', time: '队列中', detail: '等待最新负荷与天气因子', status: 'pending' },
-  { title: 'CosineSimilarity 等待计算', time: '队列中', detail: '匹配历史相似日价格形态', status: 'pending' },
-  { title: '输出预测的电价曲线', time: '待生成', detail: '形成实时报价策略建议', status: 'pending' },
+const currentTime = ref(new Date())
+let workflowTimer: number | undefined
+
+type WorkflowStatus = 'done' | 'running' | 'pending'
+
+type WorkflowStep = {
+  doneTitle: string
+  runningTitle: string
+  pendingTitle: string
+  detail: string
+  start: string
+  end: string
+  runningText: string
+  pendingText: string
+}
+
+const workflowSteps: WorkflowStep[] = [
+  {
+    doneTitle: '光伏出力计划已获取',
+    runningTitle: '光伏出力计划正在接入',
+    pendingTitle: '光伏出力计划等待接入',
+    detail: '43 座代理场站接入',
+    start: '08:30',
+    end: '08:34',
+    runningText: '接入中',
+    pendingText: '待接入',
+  },
+  {
+    doneTitle: '风电出力计划已获取',
+    runningTitle: '风电出力计划正在接入',
+    pendingTitle: '风电出力计划等待接入',
+    detail: '区域新能源边界同步',
+    start: '08:34',
+    end: '08:40',
+    runningText: '接入中',
+    pendingText: '待接入',
+  },
+  {
+    doneTitle: '水电出力计划已获取',
+    runningTitle: '水电出力计划正在接入',
+    pendingTitle: '水电出力计划等待接入',
+    detail: '补充省间调节能力',
+    start: '08:40',
+    end: '08:44',
+    runningText: '接入中',
+    pendingText: '待接入',
+  },
+  {
+    doneTitle: '联络线计划已获取',
+    runningTitle: '联络线计划正在校核',
+    pendingTitle: '联络线计划等待校核',
+    detail: '跨区送受电边界确认',
+    start: '08:44',
+    end: '08:51',
+    runningText: '接入中',
+    pendingText: '待接入',
+  },
+  {
+    doneTitle: '省调负荷计划已获取',
+    runningTitle: '省调负荷计划正在获取',
+    pendingTitle: '省调负荷计划等待获取',
+    detail: '从电力交易中心数据读取中',
+    start: '08:51',
+    end: '09:00',
+    runningText: '监听中',
+    pendingText: '队列中',
+  },
+  {
+    doneTitle: '竞价空间（96点）已计算',
+    runningTitle: '竞价空间（96点）正在计算',
+    pendingTitle: '竞价空间（96点）等待计算',
+    detail: '等待最新负荷与天气因子',
+    start: '09:00',
+    end: '09:10',
+    runningText: '计算中',
+    pendingText: '队列中',
+  },
+  {
+    doneTitle: 'CosineSimilarity 已计算',
+    runningTitle: 'CosineSimilarity 正在计算',
+    pendingTitle: 'CosineSimilarity 等待计算',
+    detail: '匹配历史相似日价格形态',
+    start: '09:10',
+    end: '09:20',
+    runningText: '计算中',
+    pendingText: '队列中',
+  },
+  {
+    doneTitle: '预测电价曲线已输出',
+    runningTitle: '预测电价曲线正在生成',
+    pendingTitle: '输出预测的电价曲线',
+    detail: '形成实时报价策略建议',
+    start: '09:20',
+    end: '09:30',
+    runningText: '生成中',
+    pendingText: '待生成',
+  },
 ]
+
+const toClockMinutes = (clock: string) => {
+  const [hours, minutes] = clock.split(':').map(Number)
+  return hours * 60 + minutes
+}
+
+const toTodayTime = (base: Date, clock: string) => {
+  const [hours, minutes] = clock.split(':').map(Number)
+  return new Date(base.getFullYear(), base.getMonth(), base.getDate(), hours, minutes, 0, 0)
+}
+
+const agentWorkflow = computed(() => {
+  const now = currentTime.value
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+
+  return workflowSteps.map((step) => {
+    const startMinutes = toClockMinutes(step.start)
+    const endMinutes = toClockMinutes(step.end)
+    const endAt = toTodayTime(now, step.end)
+
+    if (nowMinutes >= endMinutes || now >= endAt) {
+      return {
+        title: step.doneTitle,
+        detail: step.detail,
+        time: step.end,
+        status: 'done' as WorkflowStatus,
+      }
+    }
+
+    if (nowMinutes >= startMinutes) {
+      return {
+        title: step.runningTitle,
+        detail: step.detail,
+        time: step.runningText,
+        status: 'running' as WorkflowStatus,
+      }
+    }
+
+    return {
+      title: step.pendingTitle,
+      detail: step.detail,
+      time: step.pendingText,
+      status: 'pending' as WorkflowStatus,
+    }
+  })
+})
 
 const priceTrendOption = computed<EChartsOption>(() => ({
   color: ['#58d9ff', '#35f2a6', '#ffc857'],
@@ -389,9 +523,15 @@ onMounted(() => {
     dh: 780,
   })
   void fetchWeatherSnapshot()
+  workflowTimer = window.setInterval(() => {
+    currentTime.value = new Date()
+  }, 30_000)
 })
 
 onUnmounted(() => {
+  if (workflowTimer) {
+    window.clearInterval(workflowTimer)
+  }
   autofit.off()
 })
 </script>
@@ -801,28 +941,30 @@ onUnmounted(() => {
 }
 
 .agent-workflow {
-  padding: 12px 14px;
+  padding: 10px 12px 10px;
   box-sizing: border-box;
   border: 2px solid rgba(117, 215, 255, 0.18);
   background: rgba(5, 18, 31, 0.62);
+  overflow: hidden;
 }
 
 .agent-workflow header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  height: 30px;
+  height: 24px;
 }
 
 .agent-workflow header span {
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
+  margin-top: 6px;
 }
 
 .agent-workflow header em {
   color: #7fa9bb;
-  font-size: 10px;
+  font-size: 9px;
   font-style: normal;
 }
 
@@ -830,7 +972,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 11px;
-  margin-top: 8px;
+  margin-top: 18px;
 }
 
 .workflow-item {
